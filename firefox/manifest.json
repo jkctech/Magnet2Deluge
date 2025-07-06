@@ -12,6 +12,7 @@
 		"storage",
 		"contextMenus",
 		"notifications",
+		"activeTab",
 		"<all_urls>"
 	],
 	"content_scripts": [
