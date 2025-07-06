@@ -36,6 +36,15 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 	}
 });
 
+// Listen for messages from content script for direct click detection
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+	if (message.type === "magnet-link-clicked" && message.magnet) {
+		console.log('Sending magnet from direct click:', message.magnet);
+		sendMagnetToDeluge(message.magnet, sendResponse);
+		return true; // keep the message channel open for async response
+	}
+});
+
 async function sendMagnetToDeluge(magnet, sendResponse) {
 	console.log('sendMagnetToDeluge called with:', magnet);
 	// Get settings from storage

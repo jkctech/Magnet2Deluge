@@ -5,11 +5,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	const statusDiv = document.getElementById('status');
 	const testBtn = document.getElementById('test-connection');
 	const testStatus = document.getElementById('test-status');
+	const directClickCheckbox = document.getElementById('direct-click');
 
 	// Load settings
-	chrome.storage.sync.get(['delugeUrl', 'delugePassword'], function (items) {
+	chrome.storage.sync.get(['delugeUrl', 'delugePassword', 'directClick'], function (items) {
 		if (items.delugeUrl) urlInput.value = items.delugeUrl;
 		if (items.delugePassword) passwordInput.value = items.delugePassword;
+		if (typeof items.directClick === 'boolean') {
+			directClickCheckbox.checked = items.directClick;
+		} else {
+			directClickCheckbox.checked = true; // default to enabled
+		}
 	});
 
 	// Test Connection
@@ -44,7 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		e.preventDefault();
 		const delugeUrl = urlInput.value.trim();
 		const delugePassword = passwordInput.value;
-		chrome.storage.sync.set({ delugeUrl, delugePassword }, function () {
+		const directClick = directClickCheckbox.checked;
+		chrome.storage.sync.set({ delugeUrl, delugePassword, directClick }, function () {
 			statusDiv.textContent = 'Settings saved!';
 			setTimeout(() => { statusDiv.textContent = ''; }, 1500);
 		});

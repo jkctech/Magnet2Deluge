@@ -21,14 +21,32 @@ function showModal(message, status = 'success') {
 	setTimeout(function() { modal.remove(); }, 5000);
 }
 
-// Debug: Detect clicks on magnet links
+// Direct click detection for magnet links - more aggressive approach
 document.addEventListener('click', function(e) {
 	let target = e.target;
 	while (target && target.tagName !== 'A') {
 		target = target.parentElement;
 	}
 	if (target && target.href && target.href.startsWith('magnet:?')) {
-		alert('Magnet link clicked: ' + target.href);
+		// Immediately prevent default for magnet links
+		e.preventDefault();
+		e.stopPropagation();
+		e.stopImmediatePropagation();
+
+		// Check if direct click is enabled
+		chrome.storage.sync.get(['directClick'], function(items) {
+			if (items.directClick !== false) { // default to true unless explicitly disabled
+				chrome.runtime.sendMessage({ type: 'magnet-link-clicked', magnet: target.href }, function(response) {
+					if (response && response.status === 'success') {
+						showModal('Magnet sent to Deluge!', 'success');
+					} else if (response && response.status === 'already_added') {
+						showModal('Magnet already added to Deluge.', 'already');
+					} else if (response && response.status === 'error') {
+						showModal('Error: ' + (response.message || 'Failed to send magnet'), 'error');
+					}
+				});
+			}
+		});
 	}
 }, true);
 
