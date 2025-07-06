@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Magnet2Deluge Settings</title>
+	<style>
+		body {
+			font-family: 'Segoe UI', Arial, sans-serif;
+			min-width: 270px;
+			padding: 18px 16px 14px 16px;
+			background: #f7f9fa;
+			border-radius: 12px;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+			margin: 0;
+		}
+		h3 {
+			margin-top: 0;
+			margin-bottom: 16px;
+			font-size: 1.18em;
+			color: #2d3a4a;
+			letter-spacing: 0.5px;
+		}
+		label {
+			display: block;
+			margin-top: 12px;
+			margin-bottom: 4px;
+			color: #3a4a5d;
+			font-size: 0.98em;
+		}
+		input[type=text], input[type=password] {
+			width: 100%;
+			box-sizing: border-box;
+			padding: 7px 10px;
+			border: 1px solid #cfd8dc;
+			border-radius: 6px;
+			background: #fff;
+			font-size: 1em;
+			margin-bottom: 2px;
+			transition: border 0.2s;
+		}
+		input[type=text]:focus, input[type=password]:focus {
+			border: 1.5px solid #4caf50;
+			outline: none;
+		}
+		button {
+			margin-top: 18px;
+			width: 100%;
+			padding: 9px 0;
+			background: #4caf50;
+			color: #fff;
+			border: none;
+			border-radius: 6px;
+			font-size: 1.05em;
+			font-weight: 500;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+		button:hover {
+			background: #388e3c;
+		}
+		.status {
+			margin-top: 12px;
+			color: #388e3c;
+			font-size: 0.98em;
+			text-align: center;
+			min-height: 18px;
+		}
+	</style>
+	</head>
+	<body>
+		<h3>Deluge Settings</h3>
+		<form id="settings-form">
+			<label for="deluge-url">Deluge URL</label>
+			<input type="text" id="deluge-url" name="deluge-url" placeholder="http://localhost:8112" required>
+			<label for="deluge-password">Password</label>
+			<input type="password" id="deluge-password" name="deluge-password" required>
+			<button type="button" id="test-connection" style="margin-top:12px;margin-bottom:6px;background:#2196f3;">Test Connection</button>
+			<div class="status" id="test-status" style="color:#2196f3;"></div>
+			<button type="submit">Save</button>
+			<div class="status" id="status"></div>
+		</form>
+		<script src="popup.js"></script>
+	</body>
+</html> 
