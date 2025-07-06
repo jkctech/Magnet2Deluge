@@ -59,6 +59,10 @@ A browser extension that redirects magnet links to your Deluge torrent client, a
 - Deluge torrent client with Web UI enabled
 - Deluge Web UI accessible via HTTP/HTTPS
 
+## Privacy
+
+This extension is designed with privacy-first principles. We do not collect, track, or transmit any personal data. Your Deluge settings are stored locally, and the extension only communicates with your Deluge instance. For detailed information, see our [Privacy Policy](PRIVACY.md).
+
 ## Troubleshooting
 
 - **"Deluge settings missing"**: Make sure you've configured the URL and password in the extension settings

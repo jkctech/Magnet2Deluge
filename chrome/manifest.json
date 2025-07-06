@@ -5,8 +5,7 @@
 	"description": "Send magnet links directly to your Deluge instance.",
 	"permissions": [
 		"storage",
-		"contextMenus",
-		"notifications"
+		"contextMenus"
 	],
 	"host_permissions": [
 		"*://*/*"
