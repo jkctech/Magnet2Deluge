@@ -6,6 +6,23 @@
 
 A browser extension that redirects magnet links to your Deluge torrent client, allowing you to easily add torrents without manually copying and pasting magnet URLs.
 
+## Installation
+
+### Browser Extensions
+- **[Chrome Web Store]** - Coming soon
+- **[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/magnet2deluge/)** - Available now
+
+### Manual Installation
+1. Download or clone this repository
+2. Open your browser's extension management page:
+   - Chrome: `chrome://extensions/`
+   - Firefox: `about:addons`
+3. Enable "Developer mode" (Chrome) or "Debug Add-ons" (Firefox)
+4. Click "Load unpacked" (Chrome) or "Load Temporary Add-on" (Firefox)
+5. Select the appropriate folder:
+   - Chrome: `chrome/` folder
+   - Firefox: `firefox/` folder
+
 ## Features
 
 - **Direct Click Detection**: Click any magnet link to automatically send it to Deluge (Can be disabled in settings)
