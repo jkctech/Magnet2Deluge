@@ -1,0 +1,43 @@
+{
+	"manifest_version": 2,
+	"name": "Magnet2Deluge",
+	"version": "1.0",
+	"description": "Send magnet links directly to your Deluge instance.",
+	"applications": {
+		"gecko": {
+			"id": "magnet2deluge@jkctech.nl"
+		}
+	},
+	"permissions": [
+		"storage",
+		"contextMenus",
+		"notifications",
+		"<all_urls>"
+	],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"],
+			"run_at": "document_end"
+		}
+	],
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"browser_action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "icon16.png",
+			"32": "icon32.png",
+			"48": "icon48.png",
+			"128": "icon128.png"
+		}
+	},
+	"icons": {
+		"16": "icon16.png",
+		"32": "icon32.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	}
+} 
