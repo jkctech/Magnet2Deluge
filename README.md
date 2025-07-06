@@ -9,8 +9,8 @@ A browser extension that redirects magnet links to your Deluge torrent client, a
 ## Installation
 
 ### Browser Extensions
-- **[Chrome Web Store]** - Coming soon
-- **[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/magnet2deluge/)** - Available now
+- **[Chrome Web Store](https://chromewebstore.google.com/detail/heebkpkdhcilekcdkhmbeapapopmndoe)**
+- **[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/magnet2deluge/)**
 
 ### Manual Installation
 1. Download or clone this repository
