@@ -1,39 +1,39 @@
 {
-  "manifest_version": 3,
-  "name": "Magnet2Deluge",
-  "version": "1.0",
-  "description": "Sends magnet links directly to your Deluge instance.",
-  "permissions": [
-    "storage",
-    "contextMenus",
-    "notifications"
-  ],
-  "host_permissions": [
-    "*://*/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "run_at": "document_end"
-    }
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon16.png",
-      "32": "icon32.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
-    }
-  },
-  "icons": {
-    "16": "icon16.png",
-    "32": "icon32.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
-  }
+	"manifest_version": 3,
+	"name": "Magnet2Deluge",
+	"version": "1.0",
+	"description": "Send magnet links directly to your Deluge instance.",
+	"permissions": [
+		"storage",
+		"contextMenus",
+		"notifications"
+	],
+	"host_permissions": [
+		"*://*/*"
+	],
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"],
+			"run_at": "document_end"
+		}
+	],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"16": "icon16.png",
+			"32": "icon32.png",
+			"48": "icon48.png",
+			"128": "icon128.png"
+		}
+	},
+	"icons": {
+		"16": "icon16.png",
+		"32": "icon32.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	}
 } 

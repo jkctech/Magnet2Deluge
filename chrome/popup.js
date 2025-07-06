@@ -19,23 +19,23 @@ document.addEventListener('DOMContentLoaded', function () {
 		testStatus.textContent = 'Testing...';
 		testStatus.style.color = '#2196f3';
 		try {
-		const res = await fetch(`${delugeUrl}/json`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			credentials: 'include',
-			body: JSON.stringify({ method: 'auth.login', params: [delugePassword], id: 1 })
-		});
-		const data = await res.json();
-		if (data && data.result === true) {
-			testStatus.textContent = 'Connection successful!';
-			testStatus.style.color = '#4caf50';
-		} else {
-			testStatus.textContent = 'Authentication failed.';
-			testStatus.style.color = '#f44336';
-		}
+			const res = await fetch(`${delugeUrl}/json`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify({ method: 'auth.login', params: [delugePassword], id: 1 })
+			});
+			const data = await res.json();
+			if (data && data.result === true) {
+				testStatus.textContent = 'Connection successful!';
+				testStatus.style.color = '#4caf50';
+			} else {
+				testStatus.textContent = 'Authentication failed.';
+				testStatus.style.color = '#f44336';
+			}
 		} catch (e) {
-		testStatus.textContent = 'Connection error.';
-		testStatus.style.color = '#f44336';
+			testStatus.textContent = 'Connection error.';
+			testStatus.style.color = '#f44336';
 		}
 	});
 
@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		const delugeUrl = urlInput.value.trim();
 		const delugePassword = passwordInput.value;
 		chrome.storage.sync.set({ delugeUrl, delugePassword }, function () {
-		statusDiv.textContent = 'Settings saved!';
-		setTimeout(() => { statusDiv.textContent = ''; }, 1500);
+			statusDiv.textContent = 'Settings saved!';
+			setTimeout(() => { statusDiv.textContent = ''; }, 1500);
 		});
 	});
 }); 
