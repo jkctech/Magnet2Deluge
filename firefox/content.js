@@ -21,32 +21,60 @@ function showModal(message, status = 'success') {
 	setTimeout(function() { modal.remove(); }, 5000);
 }
 
-// Direct click detection for magnet links - more aggressive approach
+function handleMagnetLinkClick(href) {
+	browser.storage.sync.get(['directClick'], function(items) {
+		if (items.directClick !== false) {
+			browser.runtime.sendMessage({ type: 'magnet-link-clicked', magnet: href }, function(response) {
+				if (response && response.status === 'success') {
+					showModal('Magnet sent to Deluge!', 'success');
+				} else if (response && response.status === 'already_added') {
+					showModal('Magnet already added to Deluge.', 'already');
+				} else if (response && response.status === 'error') {
+					showModal('Error: ' + (response.message || 'Failed to send magnet'), 'error');
+				}
+			});
+		}
+	});
+}
+
+function handleTorrentLinkClick(href) {
+	browser.storage.sync.get(['directClick', 'torrentSupport'], function(items) {
+		if (items.directClick !== false && items.torrentSupport !== false) {
+			browser.runtime.sendMessage({ type: 'torrent-link-clicked', url: href }, function(response) {
+				if (response && response.status === 'success') {
+					showModal('Torrent sent to Deluge!', 'success');
+				} else if (response && response.status === 'already_added') {
+					showModal('Torrent already added to Deluge.', 'already');
+				} else if (response && response.status === 'error') {
+					showModal('Error: ' + (response.message || 'Failed to send torrent'), 'error');
+				}
+			});
+		}
+	});
+}
+
 document.addEventListener('click', function(e) {
 	let target = e.target;
 	while (target && target.tagName !== 'A') {
 		target = target.parentElement;
 	}
-	if (target && target.href && target.href.startsWith('magnet:?')) {
-		// Immediately prevent default for magnet links
-		e.preventDefault();
-		e.stopPropagation();
-		e.stopImmediatePropagation();
-
-		// Check if direct click is enabled
-		browser.storage.sync.get(['directClick']).then(function(items) {
-			if (items.directClick !== false) { // default to true unless explicitly disabled
-				browser.runtime.sendMessage({ type: 'magnet-link-clicked', magnet: target.href }).then(function(response) {
-					if (response && response.status === 'success') {
-						showModal('Magnet sent to Deluge!', 'success');
-					} else if (response && response.status === 'already_added') {
-						showModal('Magnet already added to Deluge.', 'already');
-					} else if (response && response.status === 'error') {
-						showModal('Error: ' + (response.message || 'Failed to send magnet'), 'error');
-					}
-				});
-			}
-		});
+	if (target && target.href) {
+		const href = target.href;
+		if (href.startsWith('magnet:?')) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			handleMagnetLinkClick(href);
+			return;
+		}
+		const torrentRegex = /\.torrent(\?.*)?$/i;
+		if (torrentRegex.test(href)) {
+			e.preventDefault();
+			e.stopPropagation();
+			e.stopImmediatePropagation();
+			handleTorrentLinkClick(href);
+			return;
+		}
 	}
 }, true);
 
