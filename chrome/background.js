@@ -1,9 +1,9 @@
 // Add context menu for all links
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.contextMenus.create({
-	id: "send-to-deluge",
-	title: "Send magnet to Deluge",
-	contexts: ["link"]
+		id: "send-to-deluge",
+		title: "Send magnet to Deluge",
+		contexts: ["link"]
 	});
 });
 
@@ -37,7 +37,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 // Listen for messages from content script for direct click detection
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	if (message.type === "magnet-link-clicked" && message.magnet) {
 		console.log('Sending magnet from direct click:', message.magnet);
 		sendMagnetToDeluge(message.magnet, sendResponse);
@@ -48,11 +48,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 async function sendMagnetToDeluge(magnet, sendResponse) {
 	console.log('sendMagnetToDeluge called with:', magnet);
 	// Get settings from storage
-	chrome.storage.sync.get(["delugeUrl", "delugePassword"], async (items) => {
+	chrome.storage.sync.get(["delugeUrl", "delugePassword", "delugeLabel"], async (items) => {
 		const delugeUrl = items.delugeUrl;
 		const delugePassword = items.delugePassword;
+		const delugeLabel = items.delugeLabel.trim();
 		if (!delugeUrl) {
-			console.log('Deluge URL missing');
+			console.error('Deluge URL missing');
 			sendResponse && sendResponse({ status: 'error', message: 'Deluge URL missing' });
 			return;
 		}
@@ -70,9 +71,17 @@ async function sendMagnetToDeluge(magnet, sendResponse) {
 			});
 			const loginData = await loginRes.json();
 			if (!loginData.result) {
-				console.log('Deluge login failed', loginData);
+				console.error('Deluge login failed:', loginData);
 				throw new Error("Deluge login failed");
 			}
+
+			// Prepare torrent options
+			const torrentOptions = {};
+			if (delugeLabel)
+			{
+				torrentOptions['label'] = delugeLabel;
+			}
+
 			// Add magnet
 			const addRes = await fetch(`${delugeUrl}/json`, {
 				method: "POST",
@@ -80,26 +89,46 @@ async function sendMagnetToDeluge(magnet, sendResponse) {
 				credentials: "include",
 				body: JSON.stringify({
 					method: "core.add_torrent_magnet",
-					params: [magnet, {}],
+					params: [magnet, torrentOptions],
 					id: 2
 				})
 			});
 			const addData = await addRes.json();
 			if (addData.error) {
-				console.log('Error adding magnet:', addData.error);
+				console.error('Error adding magnet:', addData.error);
 				if (addData.error.message && addData.error.message.includes('already in session')) {
 					sendResponse && sendResponse({ status: 'already_added', message: 'Magnet already added to Deluge.' });
 					return;
-				} else {
-					sendResponse && sendResponse({ status: 'error', message: addData.error.message });
-					throw new Error(addData.error.message);
+				}
+				sendResponse && sendResponse({ status: 'error', message: addData.error.message });
+				throw new Error(addData.error.message);
+			}
+
+			// Explicitly set label if provided (fallback for reliability)
+			if (delugeLabel && addData.result) {
+				const setLabelRes = await fetch(`${delugeUrl}/json`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					credentials: "include",
+					body: JSON.stringify({
+						method: "label.set_torrent",
+						params: [addData.result, delugeLabel],
+						id: 3
+					})
+				});
+				const setLabelData = await setLabelRes.json();
+				if (setLabelData.error) {
+					console.error('Error setting label:', setLabelData.error);
+					sendResponse && sendResponse({ status: 'error', message: 'Failed to set label: ' + setLabelData.error.message });
+					return;
 				}
 			}
+
 			console.log('Magnet sent to Deluge successfully');
 			sendResponse && sendResponse({ status: 'success' });
 		} catch (e) {
-			console.log('Error sending magnet:', e);
+			console.error('Error sending magnet:', e);
 			sendResponse && sendResponse({ status: 'error', message: e.message });
 		}
 	});
-} 
+}

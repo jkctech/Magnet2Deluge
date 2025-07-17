@@ -10,9 +10,10 @@
 			padding: 18px 16px 14px 16px;
 			background: #f7f9fa;
 			border-radius: 12px;
-			box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+			box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
 			margin: 0;
 		}
+
 		h3 {
 			margin-top: 0;
 			margin-bottom: 16px;
@@ -20,6 +21,7 @@
 			color: #2d3a4a;
 			letter-spacing: 0.5px;
 		}
+
 		label {
 			display: block;
 			margin-top: 12px;
@@ -27,7 +29,14 @@
 			color: #3a4a5d;
 			font-size: 0.98em;
 		}
-		input[type=text], input[type=password] {
+
+		small {
+			color: #4b5a6c;
+		}
+
+		input[type=text],
+		input[type=password],
+		select {
 			width: 100%;
 			box-sizing: border-box;
 			padding: 7px 10px;
@@ -38,10 +47,14 @@
 			margin-bottom: 2px;
 			transition: border 0.2s;
 		}
-		input[type=text]:focus, input[type=password]:focus {
+
+		input[type=text]:focus,
+		input[type=password]:focus,
+		select:focus {
 			border: 1.5px solid #4caf50;
 			outline: none;
 		}
+
 		button {
 			margin-top: 18px;
 			width: 100%;
@@ -55,9 +68,11 @@
 			cursor: pointer;
 			transition: background 0.2s;
 		}
+
 		button:hover {
 			background: #388e3c;
 		}
+
 		.status {
 			margin-top: 12px;
 			color: #388e3c;
@@ -66,23 +81,29 @@
 			min-height: 18px;
 		}
 	</style>
-	</head>
-	<body>
-		<h3>Deluge Settings</h3>
-		<form id="settings-form">
-			<label for="deluge-url">Deluge URL</label>
-			<input type="text" id="deluge-url" name="deluge-url" placeholder="http://localhost:8112" required>
-			<label for="deluge-password">Password</label>
-			<input type="password" id="deluge-password" name="deluge-password">
-			<label for="direct-click" style="margin-top: 12px;">
-				<input type="checkbox" id="direct-click" name="direct-click">
-				Enable direct click detection (no right-click needed)
-			</label>
-			<button type="button" id="test-connection" style="margin-top:12px;margin-bottom:6px;background:#2196f3;">Test Connection</button>
-			<div class="status" id="test-status" style="color:#2196f3;"></div>
-			<button type="submit">Save</button>
-			<div class="status" id="status"></div>
-		</form>
-		<script src="popup.js"></script>
-	</body>
-</html> 
+</head>
+<body>
+	<h3>Deluge Settings</h3>
+	<form id="settings-form">
+		<label for="deluge-url">Deluge URL</label>
+		<input type="text" id="deluge-url" name="deluge-url" placeholder="http://localhost:8112" required>
+		<label for="deluge-password">Password</label>
+		<!-- Password should NOT be required -->
+		<input type="password" id="deluge-password" name="deluge-password">
+		<label for="deluge-label">Default Label</label>
+		<select id="deluge-label" name="deluge-label" disabled>
+			<option value="">None</option>
+		</select>
+		<small id="deluge-label-subtext">Label plugin is not enabled in Deluge</small>
+		<label for="direct-click" style="margin-top: 12px;">
+			<input type="checkbox" id="direct-click" name="direct-click">
+			Enable direct click detection (no right-click needed)
+		</label>
+		<button type="button" id="test-connection" style="margin-top:12px;margin-bottom:6px;background:#2196f3;">Test Connection</button>
+		<div class="status" id="test-status" style="color:#2196f3;"></div>
+		<button type="submit">Save</button>
+		<div class="status" id="status"></div>
+	</form>
+	<script src="popup.js"></script>
+</body>
+</html>
