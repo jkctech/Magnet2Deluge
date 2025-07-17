@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const testBtn = document.getElementById('test-connection');
 	const testStatus = document.getElementById('test-status');
 	const directClickCheckbox = document.getElementById('direct-click');
+	const torrentSupportCheckbox = document.getElementById('torrent-support');
 
 	// Function to populate label dropdown
 	async function populateLabels(delugeUrl, delugePassword, selectedLabel) {
@@ -82,13 +83,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 	}
 
 	// Load settings and populate labels
-	chrome.storage.sync.get(['delugeUrl', 'delugePassword', 'delugeLabel', 'directClick'], async function (items) {
+	chrome.storage.sync.get(['delugeUrl', 'delugePassword', 'delugeLabel', 'directClick', 'torrentSupport'], async function (items) {
 		if (items.delugeUrl) urlInput.value = items.delugeUrl;
 		if (items.delugePassword) passwordInput.value = items.delugePassword;
 		if (typeof items.directClick === 'boolean') {
 			directClickCheckbox.checked = items.directClick;
 		} else {
 			directClickCheckbox.checked = true; // default to enabled
+		}
+		if (typeof items.torrentSupport === 'boolean') {
+			torrentSupportCheckbox.checked = items.torrentSupport;
+		} else {
+			torrentSupportCheckbox.checked = true; // default to enabled
 		}
 		// Populate labels and set saved label
 		await populateLabels(items.delugeUrl, items.delugePassword, items.delugeLabel);
@@ -132,7 +138,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 		const delugePassword = passwordInput.value;
 		const delugeLabel = labelSelect.value.trim();
 		const directClick = directClickCheckbox.checked;
-		chrome.storage.sync.set({ delugeUrl, delugePassword, delugeLabel, directClick }, function () {
+		const torrentSupport = torrentSupportCheckbox.checked;
+		chrome.storage.sync.set({ delugeUrl, delugePassword, delugeLabel, directClick, torrentSupport }, function () {
 			statusDiv.textContent = 'Settings saved!';
 			setTimeout(() => { statusDiv.textContent = ''; }, 1500);
 		});
