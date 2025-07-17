@@ -26,10 +26,12 @@ A browser extension that redirects magnet links to your Deluge torrent client, a
 ## Features
 
 - **Direct Click Detection**: Click any magnet link to automatically send it to Deluge (Can be disabled in settings)
-- **Context Menu**: Right-click magnet links for manual control
+- **.torrent Support**: Click any .torrent link to send it to Deluge (Can be enabled/disabled in settings)
+- **Context Menu**: Right-click magnet or .torrent links for manual control
+- **Label Plugin Support**: If the Deluge Label plugin is enabled, you can set a default label for new torrents (works only for magnet links!)
 - **Visual Feedback**: Modals show success, error, or "already added" status
 - **Connection Testing**: Test your Deluge connection directly from the settings
-- **Settings Management**: Easy configuration of Deluge URL and password
+- **Settings Management**: Easy configuration of Deluge settings and feature toggles
 
 ## Getting Started
 
@@ -42,7 +44,7 @@ A browser extension that redirects magnet links to your Deluge torrent client, a
 ## Usage
 
 ### Direct Click (Enabled by default)
-- Simply click any magnet link on any webpage
+- Simply click any magnet or torrent link on any webpage
 - The extension will automatically send it to Deluge
 - A colored modal will appear showing the result:
   - **Green**: Successfully added to Deluge
@@ -50,8 +52,12 @@ A browser extension that redirects magnet links to your Deluge torrent client, a
   - **Red**: Error occurred
 
 ### Context Menu
-- Right-click any magnet link
-- Select "Send magnet to Deluge" from the context menu
+- Right-click any magnet or .torrent link
+- Select "Send to Deluge" from the context menu
+
+### Label Plugin Support
+- If the [Deluge Label plugin](https://deluge-torrent.org/plugins/) is enabled in your Deluge Web UI, you can select a default label in the extension settings.
+- The label will be applied to magnet links when added via the extension.
 
 ## Requirements
 
