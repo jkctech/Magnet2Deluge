@@ -53,7 +53,7 @@ async function sendMagnetToDeluge(magnet, sendResponse) {
 		const delugePassword = items.delugePassword;
 		const delugeLabel = items.delugeLabel.trim();
 		if (!delugeUrl) {
-			console.error('Deluge URL missing');
+			console.log('Deluge URL missing');
 			sendResponse && sendResponse({ status: 'error', message: 'Deluge URL missing' });
 			return;
 		}
@@ -71,7 +71,7 @@ async function sendMagnetToDeluge(magnet, sendResponse) {
 			});
 			const loginData = await loginRes.json();
 			if (!loginData.result) {
-				console.error('Deluge login failed:', loginData);
+				console.log('Deluge login failed:', loginData);
 				throw new Error("Deluge login failed");
 			}
 

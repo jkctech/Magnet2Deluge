@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const directClickCheckbox = document.getElementById('direct-click');
 
 	// Function to populate label dropdown
-	async function populateLabels(delugeUrl, delugePassword) {
+	async function populateLabels(delugeUrl, delugePassword, selectedLabel) {
 		labelSelect.innerHTML = '<option value="">None</option>'; // Reset to "None"
 		if (!delugeUrl) {
 			return;
@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 			const loginData = await loginRes.json();
 			if (!loginData.result) {
 				console.error('Deluge login failed:', loginData);
+				labelSubtext.style.display = "";
+				labelSelect.disabled = true;
 				return;
 			}
 
@@ -61,6 +63,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 				});
 				labelSubtext.style.display = "none";
 				labelSelect.disabled = false;
+				// Try to set the selected label if it exists
+				if (selectedLabel && labelsData.result.includes(selectedLabel)) {
+					labelSelect.value = selectedLabel;
+				}
 			} else {
 				console.error('Failed to fetch labels:', labelsData);
 				testStatus.textContent = 'Failed to fetch labels.';
@@ -85,10 +91,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 			directClickCheckbox.checked = true; // default to enabled
 		}
 		// Populate labels and set saved label
-		await populateLabels(items.delugeUrl, items.delugePassword);
-		if (items.delugeLabel) {
-			labelSelect.value = items.delugeLabel;
-		}
+		await populateLabels(items.delugeUrl, items.delugePassword, items.delugeLabel);
 	});
 
 	// Test Connection
@@ -108,15 +111,17 @@ document.addEventListener('DOMContentLoaded', async function () {
 			if (data && data.result === true) {
 				testStatus.textContent = 'Connection successful!';
 				testStatus.style.color = '#4caf50';
-				// Populate labels on successful connection
-				await populateLabels(delugeUrl, delugePassword);
+				// Populate labels on successful connection, keep current selection
+				await populateLabels(delugeUrl, delugePassword, labelSelect.value);
 			} else {
 				testStatus.textContent = 'Authentication failed.';
 				testStatus.style.color = '#f44336';
+				await populateLabels(delugeUrl, delugePassword);
 			}
 		} catch (e) {
 			testStatus.textContent = 'Connection error.';
 			testStatus.style.color = '#f44336';
+			await populateLabels(delugeUrl, delugePassword);
 		}
 	});
 
