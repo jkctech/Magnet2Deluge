@@ -90,14 +90,18 @@
 		<label for="deluge-password">Password</label>
 		<!-- Password should NOT be required -->
 		<input type="password" id="deluge-password" name="deluge-password">
-		<label for="deluge-label">Default Label</label>
+		<label for="deluge-label">Custom Label <small>(Only works on magnet links)</small></label>
 		<select id="deluge-label" name="deluge-label" disabled>
 			<option value="">None</option>
 		</select>
 		<small id="deluge-label-subtext">Could not connect to Deluge Label plugin</small>
 		<label for="direct-click" style="margin-top: 12px;">
 			<input type="checkbox" id="direct-click" name="direct-click">
-			Enable direct click detection (no right-click needed)
+			Enable direct click magnet detection
+		</label>
+		<label for="torrent-support" style="margin-top: 12px;">
+			<input type="checkbox" id="torrent-support" name="torrent-support">
+			Enable direct click .torrent detection
 		</label>
 		<button type="button" id="test-connection" style="margin-top:12px;margin-bottom:6px;background:#2196f3;">Test Connection</button>
 		<div class="status" id="test-status" style="color:#2196f3;"></div>
