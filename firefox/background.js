@@ -84,7 +84,7 @@ async function sendMagnetToDeluge(magnet, sendResponse) {
 	browser.storage.sync.get(["delugeUrl", "delugePassword", "delugeLabel"], async (items) => {
 		const delugeUrl = items.delugeUrl;
 		const delugePassword = items.delugePassword;
-		const delugeLabel = items.delugeLabel.trim();
+		const delugeLabel = items.delugeLabel ? items.delugeLabel.trim() : '';
 		if (!delugeUrl) {
 			console.log('Deluge URL missing');
 			sendResponse && sendResponse({ status: 'error', message: 'Deluge URL missing' });
