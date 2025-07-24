@@ -34,29 +34,24 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 				}
 			});
 		} else if (/\.torrent(\?.*)?$/i.test(info.linkUrl)) {
-			// Check if .torrent support is enabled
-			browser.storage.sync.get(['torrentSupport'], function(items) {
-				if (items.torrentSupport !== false) {
-					sendTorrentUrlToDeluge(info.linkUrl, (result) => {
-						if (tab && tab.id) {
-							let colorMsg;
-							let colorType;
-							if (result.status === 'already_added') {
-								colorMsg = 'Torrent already added to Deluge.';
-								colorType = 'already';
-							} else if (result.status === 'success') {
-								colorMsg = 'Torrent sent to Deluge!';
-								colorType = 'success';
-							} else {
-								colorMsg = 'Error: ' + (result.message || 'Failed to send torrent');
-								colorType = 'error';
-							}
-							browser.tabs.sendMessage(tab.id, {
-								type: 'magnet-modal',
-								message: colorMsg,
-								status: colorType
-							});
-						}
+			sendTorrentUrlToDeluge(info.linkUrl, (result) => {
+				if (tab && tab.id) {
+					let colorMsg;
+					let colorType;
+					if (result.status === 'already_added') {
+						colorMsg = 'Torrent already added to Deluge.';
+						colorType = 'already';
+					} else if (result.status === 'success') {
+						colorMsg = 'Torrent sent to Deluge!';
+						colorType = 'success';
+					} else {
+						colorMsg = 'Error: ' + (result.message || 'Failed to send torrent');
+						colorType = 'error';
+					}
+					browser.tabs.sendMessage(tab.id, {
+						type: 'magnet-modal',
+						message: colorMsg,
+						status: colorType
 					});
 				}
 			});
