@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Magnet2Deluge",
-	"version": "1.1.2",
+	"version": "1.1.3",
 	"description": "Send magnet and torrent links directly to your Deluge server.",
 	"permissions": [
 		"storage",

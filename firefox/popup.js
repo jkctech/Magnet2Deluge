@@ -10,6 +10,20 @@ document.addEventListener('DOMContentLoaded', async function () {
 	const directClickCheckbox = document.getElementById('direct-click');
 	const torrentSupportCheckbox = document.getElementById('torrent-support');
 
+	// Sanitize URL
+	function sanitizeUrl(url) {
+		try {
+			const parsed = new URL(url);
+			if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+			const path = parsed.pathname.replace(/\/+$/, '');
+			const sanitized = parsed.origin + path + parsed.hash;
+			new URL(sanitized);
+			return sanitized;
+		} catch {
+			return false;
+		}
+	}
+
 	// Function to populate label dropdown
 	async function populateLabels(delugeUrl, delugePassword, selectedLabel) {
 		labelSelect.innerHTML = '<option value="">None</option>'; // Reset to "None"
@@ -84,7 +98,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 	// Load settings and populate labels
 	browser.storage.sync.get(['delugeUrl', 'delugePassword', 'delugeLabel', 'directClick', 'torrentSupport'], async function (items) {
-		if (items.delugeUrl) urlInput.value = items.delugeUrl;
+		if (items.delugeUrl)
+		{
+			const url = sanitizeUrl(items.delugeUrl) || "";
+			urlInput.value = url;
+
+			// Populate labels and set saved label
+			await populateLabels(url, items.delugePassword, items.delugeLabel);
+		}
 		if (items.delugePassword) passwordInput.value = items.delugePassword;
 		if (typeof items.directClick === 'boolean') {
 			directClickCheckbox.checked = items.directClick;
@@ -96,17 +117,24 @@ document.addEventListener('DOMContentLoaded', async function () {
 		} else {
 			torrentSupportCheckbox.checked = true; // default to enabled
 		}
-		// Populate labels and set saved label
-		await populateLabels(items.delugeUrl, items.delugePassword, items.delugeLabel);
 	});
 
 	// Test Connection
 	testBtn.addEventListener('click', async function () {
-		const delugeUrl = urlInput.value.trim();
+		const delugeUrl = sanitizeUrl(urlInput.value);
 		const delugePassword = passwordInput.value;
 		testStatus.textContent = 'Testing...';
 		testStatus.style.color = '#2196f3';
 		try {
+			// Sanitizing checks
+			if (!delugeUrl)
+			{
+				testStatus.textContent = 'Invalid URL!';
+				testStatus.style.color = '#f44336';
+				return;
+			}
+			// Reflect
+			urlInput.value = delugeUrl;
 			const res = await fetch(`${delugeUrl}/json`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -134,11 +162,22 @@ document.addEventListener('DOMContentLoaded', async function () {
 	// Save settings
 	form.addEventListener('submit', function (e) {
 		e.preventDefault();
-		const delugeUrl = urlInput.value.trim();
+		const delugeUrl = sanitizeUrl(urlInput.value);
 		const delugePassword = passwordInput.value;
 		const delugeLabel = labelSelect.value.trim();
 		const directClick = directClickCheckbox.checked;
 		const torrentSupport = torrentSupportCheckbox.checked;
+
+		// Sanitizing checks
+		if (!delugeUrl)
+		{
+			testStatus.textContent = 'Invalid URL!';
+			testStatus.style.color = '#f44336';
+			return;
+		}
+		// Reflect
+		urlInput.value = delugeUrl;
+
 		browser.storage.sync.set({ delugeUrl, delugePassword, delugeLabel, directClick, torrentSupport }, function () {
 			statusDiv.textContent = 'Settings saved!';
 			setTimeout(() => { statusDiv.textContent = ''; }, 1500);

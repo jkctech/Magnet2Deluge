@@ -1,10 +1,35 @@
+// Sanitize URL
+function sanitizeUrl(url) {
+	try {
+		const parsed = new URL(url);
+		if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return false;
+		const path = parsed.pathname.replace(/\/+$/, '');
+		const sanitized = parsed.origin + path + parsed.hash;
+		new URL(sanitized);
+		return sanitized;
+	} catch {
+		return false;
+	}
+}
+
+// Check old settings for bad URLs
+chrome.storage.sync.get(["delugeUrl"], async (items) => {
+	const delugeUrl = sanitizeUrl(items.delugeUrl) || "";
+	if (delugeUrl !== items.delugeUrl)
+	{
+		chrome.storage.sync.set({delugeUrl}, function () {
+			console.log("Forced URL sanitization!");
+		});
+	}
+});
+
 // Add context menu for all links
 browser.runtime.onInstalled.addListener(() => {
 	browser.contextMenus.create({
 		id: "send-to-deluge",
 		title: "Send to Deluge",
 		contexts: ["link"]
-	});
+	});	
 });
 
 // Handle context menu click
